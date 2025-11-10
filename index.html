@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Balonismo — Aventuras no Céu</title>
+  <meta name="description" content="Tudo sobre balonismo: passeios, eventos e curiosidades." />
+
+  <style>
+    :root{--bg:#f7fbff;--card:#ffffff;--accent:#ff6b6b;--muted:#6b7280;--glass:rgba(255,255,255,0.6)}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;color:#0f172a;background:linear-gradient(180deg,#eaf6ff 0%,var(--bg) 60%);-webkit-font-smoothing:antialiased}
+    header{position:sticky;top:0;backdrop-filter:blur(6px);background:linear-gradient(90deg,rgba(255,255,255,0.6),rgba(255,255,255,0.5));border-bottom:1px solid rgba(15,23,42,0.06);z-index:50}
+    .container{max-width:1100px;margin:0 auto;padding:1rem}
+    nav{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+    .brand{display:flex;align-items:center;gap:.6rem;font-weight:700}
+    .brand .logo{width:42px;height:42px;border-radius:999px;background:linear-gradient(135deg,#ffd89b,#ff6b6b);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
+    .menu{display:flex;gap:1rem}
+    .menu a{color:var(--muted);text-decoration:none;font-weight:600}
+    .hamburger{display:none}
+
+    /* HERO */
+    .hero{padding:3.2rem 0 4rem;display:grid;grid-template-columns:1fr 420px;gap:2rem;align-items:center}
+    .hero .kicker{display:inline-block;background:var(--glass);padding:.25rem .6rem;border-radius:999px;font-weight:700;color:var(--accent);margin-bottom:.8rem}
+    h1{font-size:clamp(1.6rem,3.6vw,2.6rem);margin:.1rem 0 0.6rem}
+    p.lead{color:var(--muted);line-height:1.5}
+    .cta{margin-top:1rem;display:flex;gap:.75rem}
+    .btn{background:var(--accent);color:#fff;padding:.7rem 1rem;border-radius:12px;text-decoration:none;font-weight:700;box-shadow:0 8px 20px rgba(255,107,107,0.12)}
+    .btn.ghost{background:transparent;color:var(--accent);box-shadow:none;border:2px solid rgba(255,107,107,0.12)}
+
+    /* balloon canvas */
+    .sky{position:relative;height:360px;border-radius:16px;background:linear-gradient(180deg,#d9f3ff,#f7fbff);overflow:hidden;box-shadow:0 10px 30px rgba(15,23,42,0.06);display:flex;align-items:center;justify-content:center}
+    .balloon{position:absolute;width:120px;height:160px;transform-origin:center bottom}
+    .balloon svg{width:100%;height:100%}
+    /* multiple balloons with different speeds */
+    .b1{left:10%;bottom:10%;animation:floatX 18s ease-in-out infinite, drift 30s linear infinite}
+    .b2{left:40%;bottom:-5%;width:90px;animation:floatX 16s ease-in-out infinite, drift 26s linear infinite}
+    .b3{left:70%;bottom:0;width:110px;animation:floatX 20s ease-in-out infinite, drift 32s linear infinite}
+    @keyframes floatX{0%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-18px) rotate(2deg)}100%{transform:translateY(0) rotate(-2deg)}}
+    @keyframes drift{0%{transform:translateX(0)}100%{transform:translateX(40px)}}
+
+    /* sections */
+    section{padding:2.4rem 0}
+    .grid{display:grid;gap:1rem}
+    .cols-3{grid-template-columns:repeat(3,1fr)}
+    .card{background:var(--card);padding:1rem;border-radius:12px;box-shadow:0 6px 18px rgba(15,23,42,0.05)}
+    .muted{color:var(--muted);font-size:.95rem}
+
+    /* gallery */
+    .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem}
+    .gallery-item{height:140px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#fff,#f6fbff);cursor:pointer}
+
+    /* modal */
+    .modal{position:fixed;inset:0;display:grid;place-items:center;background:rgba(3,7,18,0.45);opacity:0;pointer-events:none;transition:opacity .18s}
+    .modal.show{opacity:1;pointer-events:auto}
+    .modal .box{width:min(850px,95%);background:var(--card);padding:1rem;border-radius:12px}
+
+    footer{padding:2rem 0;color:var(--muted);text-align:center}
+
+    /* responsive */
+    @media(max-width:900px){
+      .hero{grid-template-columns:1fr;}
+      .menu{display:none}
+      .hamburger{display:block}
+      .gallery{grid-template-columns:repeat(2,1fr)}
+      .cols-3{grid-template-columns:1fr}
+      .sky{height:260px}
+    }
+
+    @media(max-width:480px){
+      .hero{padding:2rem 0}
+      .sky{height:210px}
+      .gallery-item{height:110px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <div class="brand">
+          <div class="logo">B</div>
+          <div>
+            <div>Balonismo</div>
+            <small class="muted">Aventuras no céu</small>
+          </div>
+        </div>
+
+        <div class="menu" id="menu">
+          <a href="#about">Sobre</a>
+          <a href="#passeios">Passeios</a>
+          <a href="#galeria">Galeria</a>
+          <a href="#contato">Contato</a>
+        </div>
+
+        <button class="hamburger" id="btnMenu" aria-label="Abrir menu">☰</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div>
+        <span class="kicker">Experiência</span>
+        <h1>Viva o silêncio e a paisagem do alto — balonismo para todos</h1>
+        <p class="lead">Passeios ao nascer do sol, eventos especiais e cursos introdutórios. Tudo pensado para quem busca contemplação, fotos incríveis e segurança.</p>
+        <div class="cta">
+          <a class="btn" href="#passeios">Ver passeios</a>
+          <a class="btn ghost" href="#contato">Reservar</a>
+        </div>
+
+        <section id="about">
+          <div style="margin-top:1.6rem" class="card">
+            <h3>Por que voar de balão?</h3>
+            <p class="muted">O balonismo oferece uma perspectiva única: silêncio, vistas panorâmicas e a sensação de flutuar. Guias certificados e equipe treinada garantem uma experiência segura e inesquecível.</p>
+          </div>
+        </section>
+      </div>
+
+      <div>
+        <div class="sky" aria-hidden="true">
+          <!-- Balloon 1 -->
+          <div class="balloon b1" data-title="Passeio ao nascer do sol">
+            <svg viewBox="0 0 64 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="g1" x1="0" x2="1">
+                  <stop offset="0" stop-color="#ffd89b"/>
+                  <stop offset="1" stop-color="#ff6b6b"/>
+                </linearGradient>
+              </defs>
+              <ellipse cx="32" cy="28" rx="20" ry="24" fill="url(#g1)" />
+              <rect x="20" y="52" width="24" height="18" rx="3" fill="#7b5cff" />
+              <line x1="28" y1="46" x2="28" y2="52" stroke="#3b3b3b" stroke-width="1.5" />
+              <line x1="36" y1="46" x2="36" y2="52" stroke="#3b3b3b" stroke-width="1.5" />
+            </svg>
+          </div>
+
+          <!-- Balloon 2 -->
+          <div class="balloon b2" data-title="Curso introdutório">
+            <svg viewBox="0 0 64 88" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="32" cy="28" rx="18" ry="22" fill="#8ee3f6" />
+              <rect x="22" y="52" width="20" height="18" rx="3" fill="#ffb86b" />
+            </svg>
+          </div>
+
+          <!-- Balloon 3 -->
+          <div class="balloon b3" data-title="Fotos e eventos especiais">
+            <svg viewBox="0 0 64 88" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="32" cy="28" rx="22" ry="26" fill="#c7f9c0" />
+              <rect x="18" y="52" width="28" height="18" rx="3" fill="#6b8bff" />
+            </svg>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section id="passeios">
+      <h2>Passeios & Eventos</h2>
+      <div class="grid cols-3" style="margin-top:1rem">
+        <div class="card">
+          <h3>Passeio Clássico</h3>
+          <p class="muted">35–60 minutos de voo ao nascer do sol. Ideal para iniciantes e fotógrafos.</p>
+        </div>
+        <div class="card">
+          <h3>Evento Privado</h3>
+          <p class="muted">Casamentos, pedidos de casamento e sessões fotográficas com logística personalizada.</p>
+        </div>
+        <div class="card">
+          <h3>Curso Introdutório</h3>
+          <p class="muted">Conheça a história, segurança e operação básica de um balão — teoria + demonstração prática.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="galeria">
+      <h2>Galeria</h2>
+      <p class="muted">Clique nas imagens para ampliar.</p>
+      <div class="gallery" style="margin-top:1rem">
+        <div class="gallery-item" data-src="Passeio ao nascer do sol"><strong>Nascer do sol</strong></div>
+        <div class="gallery-item" data-src="Casamento no balão"><strong>Casamento</strong></div>
+        <div class="gallery-item" data-src="Treinamento"><strong>Curso</strong></div>
+        <div class="gallery-item" data-src="Voo em grupo"><strong>Grupo</strong></div>
+        <div class="gallery-item" data-src="Paisagens"><strong>Paisagens</strong></div>
+        <div class="gallery-item" data-src="Evento especial"><strong>Evento</strong></div>
+      </div>
+    </section>
+
+    <section id="contato">
+      <h2>Contato</h2>
+      <div class="grid cols-3" style="margin-top:1rem;align-items:start">
+        <div class="card">
+          <h3>Reserve seu voo</h3>
+          <p class="muted">Envie seus dados e entraremos em contato com opções de datas e preços.</p>
+          <form onsubmit="event.preventDefault();alert('Obrigado! Entraremos em contato.');this.reset();">
+            <div style="display:flex;flex-direction:column;gap:.6rem;margin-top:.6rem">
+              <input required placeholder="Nome" style="padding:.6rem;border-radius:8px;border:1px solid #e6eef8" />
+              <input required placeholder="Email" type="email" style="padding:.6rem;border-radius:8px;border:1px solid #e6eef8" />
+              <input placeholder="Telefone" style="padding:.6rem;border-radius:8px;border:1px solid #e6eef8" />
+              <button class="btn" style="width:100%;">Enviar</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <h3>Localização</h3>
+          <p class="muted">Realizamos voos em regiões abertas e com permissão. Fornecemos pontos de encontro próximos às cidades onde operamos.</p>
+        </div>
+
+        <div class="card">
+          <h3>Dúvidas frequentes</h3>
+          <p class="muted">Idade mínima: 8 anos (acompanhantes), restrições médicas: gestantes e problemas cardíacos devem consultar o médico.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="modal" role="dialog" aria-hidden="true">
+    <div class="box" id="modalBox">
+      <h3 id="modalTitle"></h3>
+      <p class="muted" id="modalText">Descrição do item.</p>
+      <div style="text-align:right;margin-top:1rem"><button class="btn" id="closeModal">Fechar</button></div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <small>© <span id="year"></span> Balonismo — Todos os direitos reservados</small>
+    </div>
+  </footer>
+
+  <script>
+    // year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // responsive menu
+    const btnMenu = document.getElementById('btnMenu');
+    const menu = document.getElementById('menu');
+    btnMenu.addEventListener('click', ()=>{
+      if(menu.style.display==='flex'){menu.style.display='none'}else{menu.style.display='flex';menu.style.flexDirection='column';menu.style.gap='0.6rem'}
+    });
+
+    // gallery & balloons modal
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalText = document.getElementById('modalText');
+    const closeModal = document.getElementById('closeModal');
+
+    function openModal(title, text){modalTitle.textContent = title; modalText.textContent = text || 'Mais informações em breve.'; modal.classList.add('show'); modal.setAttribute('aria-hidden','false')}
+    function hideModal(){modal.classList.remove('show'); modal.setAttribute('aria-hidden','true')}
+    closeModal.addEventListener('click', hideModal);
+    modal.addEventListener('click', (e)=>{ if(e.target===modal) hideModal(); })
+
+    document.querySelectorAll('.gallery-item').forEach(item=>{
+      item.addEventListener('click', ()=> openModal(item.dataset.src, 'Galeria — ' + item.dataset.src + '. Aqui você pode adicionar fotos reais do passeio.'))
+    })
+
+    document.querySelectorAll('.balloon').forEach(b=>{
+      b.addEventListener('click', ()=> openModal(b.dataset.title, 'Clique em Reservar para solicitar disponibilidade.'))
+    })
+
+    // smooth scrolling for internal links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', function(e){
+        const href = this.getAttribute('href');
+        if(href.length>1){e.preventDefault();document.querySelector(href).scrollIntoView({behavior:'smooth',block:'start'})}
+      })
+    });
+
+    // small floating randomization to avoid perfectly repeating paths
+    document.querySelectorAll('.balloon').forEach((el,i)=>{
+      el.style.animationDelay = (i*1.2)+'s';
+      el.style.opacity = 0.95 - i*0.05;
+    })
+  </script>
+</body>
+</html>
